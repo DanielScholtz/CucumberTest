@@ -63,5 +63,10 @@
             <groupId>net.serenity-bdd</groupId>
             <artifactId>core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>3.13.0</version>
+        </dependency>
     </dependencies>
 </project>

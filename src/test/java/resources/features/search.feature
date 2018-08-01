@@ -4,8 +4,11 @@ Feature: Searching for a job at Epam
   I want to visit the EPAM career site
   So that I can apply for a job
 
-  Scenario Outline: CAREER_1 - Searching for Test Automation
+  Background:
     Given the EPAM Career website is loaded
+
+    @JobsWithTAKeyword
+  Scenario Outline: CAREER_1.1 - Searching for Test Automation
     When the <keyword> entered
     And the Find button is clicked
     Then <description> description should be displayed
@@ -13,3 +16,33 @@ Feature: Searching for a job at Epam
       | keyword         | description                                             |
       | Test Automation | Currently we are looking for a Test Automation Engineer |
       | Java Developer  | Currently we are looking for a Java Developer           |
+
+    @JobsWithSpecificLocation
+    Scenario Outline: CAREER_1.2 - Searching jobs in different locations
+      When choosing <country> as country and <city> as city for location
+      And the Find button is clicked
+      Then <description> description should be displayed
+      Examples:
+        | country | city     | description                                            |
+        | Hungary | Debrecen | for our Debrecen office to make the team even stronger |
+        | Poland  | Warsaw   |  for our Warsaw office to make the team even stronger  |
+
+      @JobsWithQASkills
+      Scenario: CAREER_1.3 - Searching jobs with Test Engineer skill
+        When opening the skills menu
+        And choosing Software Test Engineer skill
+        And the Find button is clicked
+        Then Test Engineer description should be displayed
+
+        @KeywordLocationSkillsCombinedSearch
+        Scenario Outline: CAREER_1.4 - Searching for specific job in different with different skills
+          When the <keyword> entered
+          And choosing <country> as country and <city> as city for location
+          And opening the skills menu
+          And choosing <skill> skill
+          And the Find button is clicked
+          Then <description> description should be displayed
+          Examples:
+            | keyword         | country       | city    | skill                  | description                                                                   |
+            | Test Automation | Belarus       | Mogilev | Software Test Engineer | Test Automation Engineer in .NET to join our team in Mogilev                  |
+            | Manager         | United States | USA     | Business Analysis      | You are strategic, resilient, engaging with people and a natural self-starter |
