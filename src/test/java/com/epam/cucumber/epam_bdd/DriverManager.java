@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Hooks {
+public class DriverManager {
     WebDriver driver;
 
     public static WebDriver getDriver(WebDriver driver) {
@@ -21,14 +21,6 @@ public class Hooks {
 
     public static WebDriverWait getWait(WebDriver driver, WebDriverWait wait) {
         return wait = new WebDriverWait(driver, 60);
-    }
-
-    public void url() {
-        driver.get("https://www.epam.com/careers");
-    }
-
-    public void tearDown() {
-        driver.quit();
     }
 
 }

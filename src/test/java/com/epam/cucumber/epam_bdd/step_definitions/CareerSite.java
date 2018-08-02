@@ -1,6 +1,6 @@
 package com.epam.cucumber.epam_bdd.step_definitions;
 
-import com.epam.cucumber.epam_bdd.Hooks;
+import com.epam.cucumber.epam_bdd.DriverManager;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.epam.cucumber.epam_bdd.urls.CAREER_URL;
+
 public class CareerSite {
 
     @FindBy(css = "*[id^='select-box-location-'")
@@ -38,21 +40,21 @@ public class CareerSite {
     private WebElement sortByDate;
     @FindBy (css = ".selected-params selected")
     private WebElement selectedSkillsTabArrow;
-    WebDriver driver = null;
-    WebDriverWait wait;
+    private WebDriver driver;
+    private WebDriverWait wait;
     private Logger log = LoggerFactory.getLogger(CareerSite.class);
-    Hooks hooks = new Hooks();
+    DriverManager drivermanager = new DriverManager();
 
     @Before
     public void initBrowser() {
-        driver = hooks.getDriver(driver);
-        wait = hooks.getWait(driver, wait);
+        driver = drivermanager.getDriver(driver);
+        wait = drivermanager.getWait(driver, wait);
         PageFactory.initElements(driver, this);
     }
 
     @Given("the EPAM Career website is loaded")
     public void openingCareerSite() {
-        driver.get("https://www.epam.com/careers");
+        driver.get(CAREER_URL);
         locationArrow.click();
         defaultLocation.click();
     }
@@ -84,8 +86,8 @@ public class CareerSite {
         skillsTabArrow.click();
     }
 
-    @And("choosing (.*) skill")
-    public void skills(String skill ) {
+    @And("choosing \"([^\"]*)\" as a skill")
+    public void skills(String skill) {
         driver.findElement(By.xpath("//*[@class='checkbox-custom-label' and contains(., '" + skill + "')]")).click();
     }
 
