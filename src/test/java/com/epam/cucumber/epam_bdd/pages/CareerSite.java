@@ -1,12 +1,6 @@
-package com.epam.cucumber.epam_bdd.step_definitions;
+package com.epam.cucumber.epam_bdd.pages;
 
 import com.epam.cucumber.epam_bdd.DriverManager;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -57,40 +51,32 @@ public class CareerSite {
     @FindBy(css = "*[role='treeitem']")
     private List<WebElement>cityList;
 
-    private WebDriver driver;
     private WebDriverWait wait;
     private Logger log = LoggerFactory.getLogger(CareerSite.class);
     private DriverManager drivermanager = new DriverManager();
+    private WebDriver driver;
 
     public CareerSite(WebDriver driver) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);
+        wait = new WebDriverWait(this.driver, 10);
     }
 
-    @Before
-    public void initBrowser() {
-        driver = drivermanager.getDriver(driver, "Firefox");
-        wait = drivermanager.getWait(driver, wait);
-    }
-
-    @Given("the EPAM Career website is loaded")
     public void openingCareerSite() {
         driver.get("https://www.epam.com/careers");
         locationArrow.click();
         defaultLocation.click();
     }
 
-    @When("the (.*) entered")
     public void keywordIsEntered(String text) {
         keywordInput.sendKeys(text);
     }
 
-    @When("the Find button is clicked")
     public void findButtonIsClicked() {
         findButton.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(searchResult));
     }
 
-    @When("choosing (.*) as country and (.*) as city for location")
     public void location(String country, String city) {
         locationArrow.click();
         for (WebElement countryElement : countryList) {
@@ -112,12 +98,10 @@ public class CareerSite {
         }
     }
 
-    @When("opening the skills menu")
     public void openSkillTab() {
         skillsTabArrow.click();
     }
 
-    @And("choosing (.*) as a skill")
     public void skills(String text) {
         for (WebElement element : skillList) {
             if (element.getText().contains(text)) {
@@ -130,7 +114,6 @@ public class CareerSite {
     }
 
 
-    @When("user click on sort by date")
     public void sortJobsByDate() throws StaleElementReferenceException {
         try {
             sortByDate.click();
@@ -146,12 +129,10 @@ public class CareerSite {
         }
     }
 
-    @Then("(.*) description should be displayed")
     public void showOpenPositions(String position) {
         driver.getPageSource().contains(position);
     }
 
-    @After
     public void closeBrowser() {
         driver.close();
         driver.quit();
