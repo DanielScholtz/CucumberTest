@@ -33,7 +33,7 @@ Feature: Searching for a job at Epam
       @JobsWithQASkills
       Scenario: CAREER_1.3 - Searching jobs with Test Engineer skill
         When opening the skills menu
-        And choosing Software Test Engineer skill
+        And choosing Software Test Engineer as a skill
         And the Find button is clicked
         Then Test Engineer description should be displayed
 
@@ -43,11 +43,18 @@ Feature: Searching for a job at Epam
           When the <keyword> entered
           And choosing <country> as country and <city> as city for location
           And opening the skills menu
-          And choosing "<skill>" as a skill
+          And choosing <skill> as a skill
           And the Find button is clicked
           Then <description> description should be displayed
           Examples:
-            | keyword         | country       | city     | skill                  | description                                                                   |
-            | Test Automation | Belarus       | Mogilev  | Software Test Engineer | Test Automation Engineer in .NET to join our team in Mogilev                  |
-            | Manager         | United States | USA      | Business Analysis      | You are strategic, resilient, engaging with people and a natural self-starter |
-            | Java            | Hungary       | Budapest |                        | Currently we are looking for Junior Java Developers for our Budapest office   |
+            | keyword         | country       | city     | skill                              | description                                                                   |
+            | Test Automation | Belarus       | Mogilev  | Software Test Engineering          | Test Automation Engineer in .NET to join our team in Mogilev                  |
+            | Manager         | United States | USA      | Consulting & Business Analysis     | You are strategic, resilient, engaging with people and a natural self-starter |
+            | Java            | Hungary       | Budapest |                                    | Currently we are looking for Junior Java Developers for our Budapest office   |
+
+          @smoke
+          @SortByDate
+          Scenario: CAREER_1.5 - Sort jobs by date
+            When the Find button is clicked
+            And user click on sort by date
+            Then Senior iOS Engineer description should be displayed
