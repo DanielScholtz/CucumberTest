@@ -75,10 +75,8 @@ public class CareerSite {
 
     public void location(String country, String city) {
         locationArrow.click();
-        WebElement countryElement = driver.findElement(By.cssSelector(String.format(COUNTRY_SELECTOR, country)));
-        countryElement.click();
-        WebElement cityElement = driver.findElement(By.cssSelector(String.format(CITY_SELECTOR, city)));
-        cityElement.click();
+        driver.findElement(By.cssSelector(String.format(COUNTRY_SELECTOR, country))).click();
+        driver.findElement(By.cssSelector(String.format(CITY_SELECTOR, city))).click();
     }
 
     public void openSkillTab() {
