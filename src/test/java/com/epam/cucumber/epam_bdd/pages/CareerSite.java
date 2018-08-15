@@ -1,33 +1,34 @@
 package com.epam.cucumber.epam_bdd.pages;
 
 import com.epam.cucumber.epam_bdd.DriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 public class CareerSite {
 
-    @FindBy(css = "*[id^='select-box-location-'")
+    @FindBy(css = ".recruiting-search__location")
     private WebElement locationArrow;
 
     @FindBy(css = "*[id$='all_locations'")
     private WebElement defaultLocation;
 
-    @FindBy(css = "input[class^='job-search__input']")
+    @FindBy(css = "input[class^='recruiting-search__input']")
     private WebElement keywordInput;
 
     @FindBy(css = "*[class*='selected-params']")
     private WebElement skillsTabArrow;
 
-    @FindBy(css = ".job-search__submit")
+    @FindBy(css = ".recruiting-search__submit")
     private WebElement findButton;
 
     @FindBy(css = ".search-result__item-name")
@@ -45,20 +46,16 @@ public class CareerSite {
     @FindBy(css = ".checkbox-custom-label")
     private List<WebElement> skillList;
 
-    @FindBy(css = "*[class='optgroup']")
-    private List<WebElement> countryList;
-
-    @FindBy(css = "*[role='treeitem']")
-    private List<WebElement>cityList;
-
     private WebDriverWait wait;
     private Logger log = LoggerFactory.getLogger(CareerSite.class);
     private DriverManager drivermanager = new DriverManager();
     private WebDriver driver;
+    private static final String COUNTRY_SELECTOR = "[aria-label=\"%s\"]";
+    private static final String CITY_SELECTOR = "*[id*='%s']";
 
-    public CareerSite(WebDriver driver) {
+      public CareerSite(WebDriver driver) {
         this.driver = driver;
-        PageFactory.initElements(driver, this);
+        PageFactory.initElements(new AjaxElementLocatorFactory(driver,5), this);
         wait = new WebDriverWait(this.driver, 10);
     }
 
@@ -74,28 +71,12 @@ public class CareerSite {
 
     public void findButtonIsClicked() {
         findButton.click();
-        wait.until(ExpectedConditions.visibilityOfAllElements(searchResult));
     }
 
     public void location(String country, String city) {
         locationArrow.click();
-        for (WebElement countryElement : countryList) {
-            if (countryElement.getText().contains(country)) {
-                if (country.length() < 1) {
-                    return;
-                } else
-                    countryElement.click();
-                for (WebElement cityElement : cityList) {
-                    if(city.equals(country)) {
-                        cityElement.getText().contains("all_"+city);
-                        cityElement.click();
-                    }
-                    else {
-                        cityElement.click();
-                    }
-                }
-            }
-        }
+        driver.findElement(By.cssSelector(String.format(COUNTRY_SELECTOR, country))).click();
+        driver.findElement(By.cssSelector(String.format(CITY_SELECTOR, city))).click();
     }
 
     public void openSkillTab() {
@@ -113,11 +94,10 @@ public class CareerSite {
         }
     }
 
-
     public void sortJobsByDate() throws StaleElementReferenceException {
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchResult));
         try {
             sortByDate.click();
-            wait.until(ExpectedConditions.elementToBeClickable(relevanceButton));
             wait.until(ExpectedConditions.attributeContains(sortByDate, "class", "--active"));
             List<WebElement> allElements = searchResult;
             for (WebElement element : allElements) {
@@ -130,11 +110,7 @@ public class CareerSite {
     }
 
     public void showOpenPositions(String position) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchResult));
         driver.getPageSource().contains(position);
-    }
-
-    public void closeBrowser() {
-        driver.close();
-        driver.quit();
     }
 }

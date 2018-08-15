@@ -16,12 +16,9 @@ public class Step_def {
     CareerSite careerSite;
     private DriverManager driverManager = new DriverManager();
 
-    public Step_def() {
-        driver = driverManager.getDriver(driver, "Firefox");
-    }
-
     @Before
     public void object() {
+        driver = driverManager.getDriver(driver, "Firefox");
         careerSite = new CareerSite(driver);
     }
 
